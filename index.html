@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Trash to Treasure - Daur Ulang Kreatif</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(145deg, #1a4d2a 0%, #2e7d32 100%);
+            font-family: 'Segoe UI', 'Poppins', 'Comic Neue', system-ui, -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        /* Container game utama */
+        .game-container {
+            max-width: 550px;
+            width: 100%;
+            background: #fef9e6;
+            border-radius: 60px 60px 48px 48px;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.3), inset 0 1px 4px rgba(255,255,200,0.8);
+            overflow: hidden;
+            backdrop-filter: blur(0px);
+            transition: all 0.2s;
+        }
+
+        /* Header alam */
+        .game-header {
+            background: #2b5e2b;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 8px;
+            background-image: radial-gradient(circle at 10% 30%, rgba(255,215,130,0.2) 2%, transparent 2.5%);
+            background-size: 28px 28px;
+            border-bottom: 4px solid #ffd966;
+        }
+
+        .score-box, .level-box {
+            background: #f7b05e;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-weight: bold;
+            color: #2d2b1f;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.1);
+            font-size: 1.1rem;
+        }
+
+        .score-box span, .level-box span {
+            color: #1e3a1e;
+            font-size: 0.8rem;
+        }
+
+        .game-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            background: #ffdfa5;
+            padding: 5px 15px;
+            border-radius: 40px;
+            color: #3c2a1f;
+            letter-spacing: 1px;
+        }
+
+        /* Area sampah & kreasi */
+        .game-area {
+            padding: 20px 16px 16px;
+        }
+
+        /* Trash bin visual */
+        .trash-bin {
+            background: #cfb284;
+            border-radius: 70px 70px 40px 40px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 24px;
+            box-shadow: inset 0 2px 5px rgba(98, 60, 20, 0.3), 0 8px 12px rgba(0,0,0,0.15);
+            border: 2px solid #a5673f;
+        }
+
+        .current-trash {
+            font-size: 5rem;
+            background: #fbe8c0;
+            display: inline-block;
+            width: 120px;
+            border-radius: 60px;
+            padding: 15px 0;
+            margin-bottom: 10px;
+            box-shadow: inset 0 0 0 3px white, 0 5px 0 #b97f44;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        .current-trash:active {
+            transform: scale(0.96);
+        }
+
+        .trash-name {
+            font-weight: bold;
+            background: #6f4e2e;
+            color: #ffefcf;
+            display: inline-block;
+            padding: 5px 20px;
+            border-radius: 60px;
+            font-size: 0.9rem;
+        }
+
+        /* Kotak pilah (organik/anorganik) */
+        .sorting-row {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .sort-btn {
+            flex: 1;
+            background: #a7c5a3;
+            border: none;
+            padding: 12px 0;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #1f3b1a;
+            box-shadow: 0 5px 0 #588157;
+            transition: 0.07s linear;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .sort-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #588157;
+        }
+
+        .sort-btn.organic {
+            background: #6c9e6b;
+            color: #f9f1cf;
+        }
+
+        .sort-btn.inorganic {
+            background: #8faa7b;
+        }
+
+        /* Workshop kreatif */
+        .craft-section {
+            background: #ecd9b4;
+            border-radius: 48px;
+            padding: 12px 18px;
+            margin-top: 12px;
+            box-shadow: inset 0 0 0 2px #fff3cf, 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .craft-title {
+            font-weight: bold;
+            text-align: center;
+            color: #4b2e1a;
+            margin: 5px 0;
+        }
+
+        .craft-items {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        .craft-card {
+            background: #fff1df;
+            border-radius: 32px;
+            padding: 8px;
+            text-align: center;
+            width: 100px;
+            cursor: pointer;
+            transition: all 0.1s;
+            border: 2px solid #c0a16b;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .craft-card:active {
+            transform: scale(0.97);
+        }
+
+        .craft-emoji {
+            font-size: 2.8rem;
+        }
+
+        .craft-name {
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .craft-price {
+            font-size: 0.7rem;
+            background: gold;
+            border-radius: 40px;
+            display: inline-block;
+            padding: 2px 8px;
+            margin-top: 5px;
+        }
+
+        .disabled-craft {
+            opacity: 0.5;
+            filter: grayscale(0.2);
+            pointer-events: none;
+        }
+
+        /* Message & Feedback */
+        .message-area {
+            background: #3b2a1fcc;
+            backdrop-filter: blur(10px);
+            margin: 12px 16px;
+            padding: 10px;
+            border-radius: 60px;
+            text-align: center;
+            font-weight: bold;
+            color: #ffefb9;
+            font-size: 0.85rem;
+        }
+
+        /* inventory */
+        .inventory {
+            background: #e7dbbd;
+            margin: 12px 16px;
+            border-radius: 36px;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .inventory span {
+            background: #5f3f28;
+            padding: 6px 14px;
+            border-radius: 40px;
+            color: #ffecb3;
+        }
+
+        /* progress & level */
+        .next-level-info {
+            text-align: center;
+            font-size: 0.7rem;
+            padding: 8px;
+            color: #294e1a;
+            font-weight: bold;
+        }
+
+        button {
+            background: none;
+            border: none;
+        }
+
+        /* animasi bounce */
+        @keyframes bounce {
+            0% { transform: scale(1);}
+            80% { transform: scale(1.1);}
+            100% { transform: scale(1);}
+        }
+
+        .bounce-animation {
+            animation: bounce 0.2s ease;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.6rem;
+            background: #cfb074;
+            padding: 8px;
+            color: #2e2b1f;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container" id="gameRoot">
+    <div class="game-header">
+        <div class="score-box">💰 <span id="scoreValue">0</span> poin</div>
+        <div class="game-title">🗑️➡️✨ Trash to Treasure</div>
+        <div class="level-box">📈 Level <span id="levelValue">1</span></div>
+    </div>
+
+    <div class="game-area">
+        <div class="trash-bin">
+            <div class="current-trash" id="trashEmoji">🥫</div>
+            <div class="trash-name" id="trashLabel">Kaleng Bekas</div>
+        </div>
+
+        <div class="sorting-row">
+            <button class="sort-btn organic" id="organicBtn">🌿 ORGANIK</button>
+            <button class="sort-btn inorganic" id="inorganicBtn">♻️ ANORGANIK</button>
+        </div>
+
+        <div class="craft-section">
+            <div class="craft-title">🎨 KREASI DARI SAMPAH TERPILAH 🛠️</div>
+            <div class="craft-items" id="craftList">
+                <!-- dynamic craft akan diisi JS -->
+            </div>
+        </div>
+    </div>
+
+    <div class="inventory">
+        📦 Inventaris Sampah Terpilah: 
+        <span>🌱 Organik: <span id="organicCount">0</span></span>
+        <span>🧴 Anorganik: <span id="inorganicCount">0</span></span>
+    </div>
+
+    <div class="message-area" id="gameMessage">
+        ✨ Petik sampah! Pilah dengan benar, lalu buat kerajinan ✨
+    </div>
+    <div class="next-level-info" id="levelProgress">
+        🎯 Naik level: kumpulkan 500 poin & buat 3 kreasi
+    </div>
+    <footer>🌎 Selamatkan bumi dengan kreativitasmu! 🌎</footer>
+</div>
+
+<script>
+    // ---------- GAME STATE ----------
+    let playerScore = 0;          // total poin
+    let playerLevel = 1;
+    let organicStock = 0;         // sampah organik terkumpul
+    let inorganicStock = 0;       // sampah anorganik
+    let craftsCreated = 0;         // jumlah total kreasi dibuat (untuk level up progress)
+    
+    // Daftar sampah acak (jenis, nama, emoji)
+    const trashItems = [
+        { name: "Kulit Pisang", emoji: "🍌", type: "organic", value: 10 },
+        { name: "Botol Plastik", emoji: "🧴", type: "inorganic", value: 15 },
+        { name: "Daun Kering", emoji: "🍂", type: "organic", value: 8 },
+        { name: "Kaleng Minuman", emoji: "🥫", type: "inorganic", value: 20 },
+        { name: "Sisa Makanan", emoji: "🍚", type: "organic", value: 12 },
+        { name: "Kardus Bekas", emoji: "📦", type: "inorganic", value: 18 },
+        { name: "Kulit Telur", emoji: "🥚", type: "organic", value: 7 },
+        { name: "Gelas Plastik", emoji: "🥤", type: "inorganic", value: 14 }
+    ];
+    
+    // Resep kerajinan: butuh bahan dan hadiah poin
+    const recipes = [
+        { id: 0, name: "Pot Bunga", emoji: "🌱", requiredType: "organic", requiredAmt: 3, reward: 80, description: "dari kompos & sampah organik" },
+        { id: 1, name: "Tas Anyaman", emoji: "🛍️", requiredType: "inorganic", requiredAmt: 3, reward: 100, description: "dari plastik & kardus" },
+        { id: 2, name: "Lampion", emoji: "🏮", requiredType: "inorganic", requiredAmt: 2, reward: 60, description: "kaleng & botol" },
+        { id: 3, name: "Pupuk Kompos", emoji: "🌿", requiredType: "organic", requiredAmt: 2, reward: 50, description: "sisa dapur & daun" }
+    ];
+    
+    // Variabel UI
+    let currentTrashObj = null;
+    
+    // Audio context & suara (menggunakan Web Audio untuk bunyi sederhana tanpa file eksternal)
+    let audioCtx = null;
+    function playBeep(type) {
+        try {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            // resume jika suspend
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'sine';
+            let freq = type === 'success' ? 880 : 440;
+            if (type === 'craft') freq = 660;
+            osc.frequency.value = freq;
+            gain.gain.value = 0.2;
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.4);
+            osc.stop(audioCtx.currentTime + 0.3);
+        } catch(e) { console.log("audio not supported"); }
+    }
+    
+    // Fungsi refresh UI: update tampilan angka, level, progress, inventaris, tampilan craft
+    function updateUI() {
+        document.getElementById('scoreValue').innerText = playerScore;
+        document.getElementById('levelValue').innerText = playerLevel;
+        document.getElementById('organicCount').innerText = organicStock;
+        document.getElementById('inorganicCount').innerText = inorganicStock;
+        
+        // update level progress message
+        let requiredScore = playerLevel * 500;
+        let requiredCrafts = playerLevel * 3;
+        let nextScore = requiredScore;
+        let nextCraftNeed = requiredCrafts;
+        let progressMsg = `🎯 Level ${playerLevel+1} butuh ${nextScore} poin & ${nextCraftNeed} kreasi. `;
+        if (playerScore >= requiredScore && craftsCreated >= requiredCrafts && playerLevel < 10) {
+            progressMsg += `✨ SIAP NAIK LEVEL! Klik tombol level up ✨`;
+        } else {
+            progressMsg += `📊 (Poin: ${playerScore}/${nextScore} | Kreasi: ${craftsCreated}/${nextCraftNeed})`;
+        }
+        document.getElementById('levelProgress').innerHTML = progressMsg;
+        
+        // update craft card status (enable/disable sesuai stok)
+        renderCraftCards();
+    }
+    
+    // menampilkan resep kerajinan & status
+    function renderCraftCards() {
+        const container = document.getElementById('craftList');
+        container.innerHTML = '';
+        recipes.forEach(recipe => {
+            let stock = recipe.requiredType === 'organic' ? organicStock : inorganicStock;
+            let canCraft = stock >= recipe.requiredAmt;
+            const card = document.createElement('div');
+            card.className = `craft-card ${!canCraft ? 'disabled-craft' : ''}`;
+            if (canCraft) {
+                card.style.cursor = 'pointer';
+                card.onclick = () => craftItem(recipe.id);
+            } else {
+                card.onclick = null;
+            }
+            card.innerHTML = `
+                <div class="craft-emoji">${recipe.emoji}</div>
+                <div class="craft-name">${recipe.name}</div>
+                <div class="craft-price">+${recipe.reward}💰</div>
+                <div style="font-size:0.6rem;">butuh ${recipe.requiredAmt} ${recipe.requiredType === 'organic' ? '🌱' : '♻️'}</div>
+            `;
+            container.appendChild(card);
+        });
+    }
+    
+    // menghasilkan sampah acak baru
+    function generateRandomTrash() {
+        const randomIndex = Math.floor(Math.random() * trashItems.length);
+        currentTrashObj = { ...trashItems[randomIndex] };
+        document.getElementById('trashEmoji').innerHTML = currentTrashObj.emoji;
+        document.getElementById('trashLabel').innerHTML = currentTrashObj.name;
+        // animasi bounce
+        const trashDiv = document.getElementById('trashEmoji');
+        trashDiv.classList.add('bounce-animation');
+        setTimeout(() => trashDiv.classList.remove('bounce-animation'), 200);
+    }
+    
+    // Proses pemilahan (klik organik / anorganik)
+    function sortTrash(selectedType) {
+        if (!currentTrashObj) {
+            generateRandomTrash();
+            return;
+        }
+        const isCorrect = (selectedType === currentTrashObj.type);
+        if (isCorrect) {
+            // pilah benar: tambah stok sesuai jenis
+            if (currentTrashObj.type === 'organic') {
+                organicStock += 1;
+                playBeep('success');
+                showMessage(`✅ Benar! +1 ${currentTrashObj.name} (Organik)`, '#a5d6a5');
+            } else {
+                inorganicStock += 1;
+                playBeep('success');
+                showMessage(`✅ Benar! +1 ${currentTrashObj.name} (Anorganik)`, '#a5d6a5');
+            }
+            // tambah poin sesuai nilai sampah
+            playerScore += currentTrashObj.value;
+            updateUI();
+            // cek level up condition
+            checkLevelUp();
+            // ganti sampah baru
+            generateRandomTrash();
+        } else {
+            // salah pilah: kurangi poin sedikit sebagai edukasi
+            let penalty = 5;
+            playerScore = Math.max(0, playerScore - penalty);
+            playBeep('fail');
+            showMessage(`❌ Salah! ${currentTrashObj.name} bukan ${selectedType}. -${penalty} poin`, '#ffb7b2');
+            updateUI();
+            generateRandomTrash(); // tetap ganti sampah
+        }
+    }
+    
+    // Membuat kerajinan
+    function craftItem(recipeId) {
+        const recipe = recipes.find(r => r.id === recipeId);
+        if (!recipe) return;
+        let stock = recipe.requiredType === 'organic' ? organicStock : inorganicStock;
+        if (stock >= recipe.requiredAmt) {
+            // kurangi stok
+            if (recipe.requiredType === 'organic') {
+                organicStock -= recipe.requiredAmt;
+            } else {
+                inorganicStock -= recipe.requiredAmt;
+            }
+            // tambah poin
+            playerScore += recipe.reward;
+            craftsCreated += 1;
+            playBeep('craft');
+            showMessage(`🎉 Keren! Kamu membuat ${recipe.name} ${recipe.emoji} +${recipe.reward} poin!`, '#ffe0a3');
+            updateUI();
+            checkLevelUp();
+            // animasi craft sukses
+        } else {
+            showMessage(`😢 Stok ${recipe.requiredType} kurang! Butuh ${recipe.requiredAmt} ${recipe.requiredType === 'organic' ? 'organik' : 'anorganik'}`, '#f9ac67');
+            playBeep('fail');
+        }
+    }
+    
+    // menampilkan pesan sementara dengan animasi
+    let msgTimeout;
+    function showMessage(msg, bgColor = "#3b2a1fcc") {
+        const msgDiv = document.getElementById('gameMessage');
+        msgDiv.style.transition = '0.1s';
+        msgDiv.style.backgroundColor = bgColor;
+        msgDiv.innerText = msg;
+        if (msgTimeout) clearTimeout(msgTimeout);
+        msgTimeout = setTimeout(() => {
+            msgDiv.style.backgroundColor = "#3b2a1fcc";
+            msgDiv.innerText = "✨ Kumpulkan sampah, pilah, lalu daur ulang jadi treasure! ✨";
+        }, 2000);
+    }
+    
+    // Cek kenaikan level berdasarkan poin dan jumlah kreasi
+    function checkLevelUp() {
+        let requiredScore = playerLevel * 500;
+        let requiredCrafts = playerLevel * 3;
+        let canLevelUp = (playerScore >= requiredScore && craftsCreated >= requiredCrafts && playerLevel < 10);
+        if (canLevelUp) {
+            // naik level
+            playerLevel++;
+            // bonus level up
+            let levelBonus = 200;
+            playerScore += levelBonus;
+            showMessage(`🌟 LEVEL UP! 🌟 Level ${playerLevel} tercapai! +${levelBonus} poin bonus!`, '#ffd966');
+            playBeep('success');
+            // setelah naik level, reset progress tidak reset inventory, hanya update UI
+            updateUI();
+            // kalau masih bisa naik level lebih lanjut (misal double up) -> loop cek lagi agar tidak loncat banyak (tapi fair)
+            if (playerLevel <= 10) {
+                checkLevelUp();
+            }
+        } else {
+            updateUI();
+        }
+    }
+    
+    // Tambahan: event untuk tombol level up manual bila syarat terpenuhi? tambahan fitur menarik
+    // namun agar tidak error, kita tambahkan fungsi untuk trigger jika pemain menekan area progress? opsional.
+    // supaya lebih interaktif, tambahkan pesan jika memenuhi syarat dan tawarkan tombol. Namun tidak perlu terlalu kompleks, otomatis sudah cek di setiap action.
+    
+    // Untuk membuat tidak membosankan: tambahkan event pada sampah (klik sampah bisa langsung dapat variasi interaksi mini)
+    // Klik pada emoji sampah akan memberikan sedikit bonus motivasi / mengingatkan
+    function initExtraFun() {
+        const trashEmojiDiv = document.getElementById('trashEmoji');
+        trashEmojiDiv.addEventListener('click', () => {
+            showMessage("💡 Klik tombol hijau/kuning untuk memilah sampah dengan benar!", "#a1c4a5");
+            playBeep('success');
+        });
+    }
+    
+    // Background musik sederhana (ambient tone menggunakan web audio loop pendek / tidak membebani)
+    let bgMusicGain = null
+    let bgMusicOsc = null;
+    let isMusicPlaying = false;
+    function startBackgroundMusic() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (bgMusicGain) return;
+        audioCtx.resume();
+        bgMusicGain = audioCtx.createGain();
+        bgMusicGain.gain.value = 0.08;  // lembut
+        bgMusicGain.connect(audioCtx.destination);
+        // Loop sederhana dengan interval nada alam
+        let notes = [261.63, 293.66, 329.63, 392.00];
+        let idx = 0;
+        function playNote() {
+            if (!isMusicPlaying) return;
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(bgMusicGain);
+            osc.type = 'sine';
+            osc.frequency.value = notes[idx % notes.length];
+            gainNode.gain.value = 0.3;
+            osc.start();
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.8);
+            osc.stop(audioCtx.currentTime + 0.7);
+            idx = (idx + 1) % notes.length;
+            setTimeout(playNote, 2200);
+        }
+        isMusicPlaying = true;
+        playNote();
+    }
+    
+    // Interaksi pengguna pertama kali akan mengaktifkan musik dan audio
+    function enableAudioAndMusic() {
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        if (!bgMusicGain && isMusicPlaying === false) {
+            startBackgroundMusic();
+        } else if (bgMusicGain && !isMusicPlaying) {
+            isMusicPlaying = true;
+            startBackgroundMusic();
+        }
+    }
+    
+    // Event listener awal untuk mengaktifkan suara (user pertama kali klik apapun)
+    function bindGlobalActivation() {
+        const activateFunc = () => {
+            enableAudioAndMusic();
+            document.removeEventListener('click', activateFunc);
+            document.removeEventListener('touchstart', activateFunc);
+        };
+        document.addEventListener('click', activateFunc);
+        document.addEventListener('touchstart', activateFunc);
+    }
+    
+    // reset atau inisiasi game
+    function initGame() {
+        playerScore = 0;
+        playerLevel = 1;
+        organicStock = 0;
+        inorganicStock = 0;
+        craftsCreated = 0;
+        generateRandomTrash();
+        updateUI();
+        showMessage("🌍 Selamat datang di Trash to Treasure! Pilah sampah & buat kerajinan!", "#527a3b");
+    }
+    
+    // tambahan animasi tombol & koneksi
+    document.getElementById('organicBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        enableAudioAndMusic();
+        sortTrash('organic');
+    });
+    document.getElementById('inorganicBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        enableAudioAndMusic();
+        sortTrash('inorganic');
+    });
+    
+    // tombol level up manual? kita sediakan fitur di progress bar? biar lebih engaging, saat level ready bisa muncul tombol? sederhana tapi dalam game cukup otomatis karena sudah cek setiap action.
+    // Agar tidak error delay dan tidak membosankan: setiap 5 detik jika stok kosong ada reminder
+    let reminderInterval = setInterval(() => {
+        if (organicStock === 0 && inorganicStock === 0 && currentTrashObj) {
+            showMessage("💪 Ayo petik sampah! Klik pilah organik/anorganik sesuai jenisnya!", "#cdb38c");
+        }
+    }, 12000);
+    
+    // initial call
+    initGame();
+    bindGlobalActivation();
+    initExtraFun();
+    // pastikan pada resize tidak ada masalah
+    window.addEventListener('load', () => {
+        // stabil
+        updateUI();
+    });
+</script>
+</body>
+</html>
